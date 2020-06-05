@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: gousers
+    release: gousers
+  name: gousers
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: gousers
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gousers
+        name: gousers
+        serviceType: server
+    spec:
+      containers:
+      - env:
+        - name: SERVER_ENV
+          value: "{{SERVER_ENV}}"
+        - name: DB_CONNECTION_URL
+          value: "{{DB_CONNECTION_URL}}"
+        - name: DB_USER
+          value: "{{DB_USER}}"
+        - name: DB_PASSWORD
+          value: "{{DB_PASSWORD}}"
+        - name: DB_DATABASE
+          value: "{{DB_DATABASE}}"
+        - name: APP_PORT
+          value: "2369"
+        - name: SENTRY
+          value: "{{SENTRY}}"
+        image:  "{{DOCKER_HUB_USERNAME}}/gousers:latest"
+        imagePullPolicy: Always
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - sleep 15
+        name: server
+        ports:
+        - containerPort: 2369
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/ping
+            port: 2369
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,33 @@
+{
+  "name": "gousers",
+  "version": "1.0.0",
+  "description": "user list",
+  "scripts": {
+    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+    "build": "preact build",
+    "serve": "preact build && preact serve",
+    "dev": "preact watch",
+    "lint": "eslint src"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-synacor"
+  },
+  "license": "MIT",
+  "author": "Shivam Gupta <shivamgupta211.github.io>",
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-synacor": "^1.1.0",
+    "if-env": "^1.0.0",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "preact-cli": "^2.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "preact": "^8.1.0",
+    "preact-material-components": "^1.6.1",
+    "preact-redux": "^1.2.0",
+    "redux": "^3.6.0"
+  },
+  "main": "index.js"
+}
